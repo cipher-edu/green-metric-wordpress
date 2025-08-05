@@ -27,9 +27,9 @@ services:
     restart: unless-stopped
     environment:
       WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_NAME: ${DB_NAME:-production_wordpress}
-      WORDPRESS_DB_USER: ${DB_USER:-wp_user}
-      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME:-greenmetric_wp}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER:-wp_user}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
       WORDPRESS_TABLE_PREFIX: ${TABLE_PREFIX:-wp_}
       WORDPRESS_DEBUG: ${WP_DEBUG:-false}
     volumes:
@@ -48,10 +48,10 @@ services:
     container_name: wordpress-db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_NAME:-production_wordpress}
-      MYSQL_USER: ${DB_USER:-wp_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-greenmetric_wp}
+      MYSQL_USER: ${MYSQL_USER:-wp_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_CHARSET: utf8mb4
       MYSQL_COLLATION: utf8mb4_unicode_ci
     volumes:
@@ -63,8 +63,7 @@ services:
       --collation-server=utf8mb4_unicode_ci
       --innodb-buffer-pool-size=256M
       --max-connections=200
-      --query-cache-size=32M
-      --query-cache-type=1
+      --default-authentication-plugin=mysql_native_password
     networks:
       - wordpress-network
 
