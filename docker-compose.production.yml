@@ -10,9 +10,10 @@ services:
       - "80:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/logs:/var/log/nginx
+      - ./nginx/logs:/var/log/nginx  
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_healthy
     networks:
       - wordpress-network
 
@@ -22,16 +23,25 @@ services:
     container_name: wordpress-app
     restart: unless-stopped
     environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:-greenmetric_wp}
-      WORDPRESS_DB_USER: ${MYSQL_USER:-wp_user}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST:-db:3306}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME:-greenmetric_wp}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER:-wp_user}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD:-WpPass2024!}
     volumes:
       - wordpress_data:/var/www/html
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./wp-config.php:/var/www/html/wp-config.php:ro
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/wp-admin/install.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     networks:
       - wordpress-network
 
@@ -43,12 +53,18 @@ services:
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-greenmetric_wp}
       MYSQL_USER: ${MYSQL_USER:-wp_user}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-WpPass2024!}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-GreenMetric2024Root!}
     volumes:
       - db_data:/var/lib/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d
-    command: --default-authentication-plugin=mysql_native_password
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-GreenMetric2024Root!}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     networks:
       - wordpress-network
 
