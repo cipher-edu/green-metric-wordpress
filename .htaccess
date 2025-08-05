@@ -1,0 +1,14 @@
+
+# BEGIN WordPress
+# Директивы (строки) между `BEGIN WordPress` и `END WordPress`
+# созданы автоматически и подлежат изменению только через фильтры WordPress.
+# Сделанные вручную изменения между этими маркерами будут перезаписаны.
+
+# END WordPress
+
+# PHP settings for plugin uploads
+php_value upload_max_filesize 128M
+php_value post_max_size 128M
+php_value memory_limit 512M
+php_value max_execution_time 600
+php_value max_input_vars 3000

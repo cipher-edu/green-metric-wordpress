@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  # Nginx Reverse Proxy with SSL
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/logs:/var/log/nginx
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - wordpress_data:/var/www/html:ro
+    depends_on:
+      - wordpress
+    networks:
+      - wordpress-network
+
+  # WordPress Application
+  wordpress:
+    build: .
+    container_name: wordpress-app
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-production_wordpress}
+      WORDPRESS_DB_USER: ${DB_USER:-wp_user}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_TABLE_PREFIX: ${TABLE_PREFIX:-wp_}
+      WORDPRESS_DEBUG: ${WP_DEBUG:-false}
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./wp-config-production.php:/var/www/html/wp-config.php
+    depends_on:
+      - db
+      - redis
+    networks:
+      - wordpress-network
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: wordpress-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-production_wordpress}
+      MYSQL_USER: ${DB_USER:-wp_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - ./backups:/backups
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --innodb-buffer-pool-size=256M
+      --max-connections=200
+      --query-cache-size=32M
+      --query-cache-type=1
+    networks:
+      - wordpress-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: wordpress-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - wordpress-network
+
+  # Backup Service
+  backup:
+    image: alpine:latest
+    container_name: wordpress-backup
+    restart: "no"
+    volumes:
+      - wordpress_data:/wordpress:ro
+      - db_data:/mysql:ro
+      - ./backups:/backups
+      - ./scripts:/scripts:ro
+    environment:
+      DB_NAME: ${DB_NAME:-production_wordpress}
+      DB_USER: root
+      DB_PASSWORD: ${DB_ROOT_PASSWORD}
+      DB_HOST: db
+    networks:
+      - wordpress-network
+    profiles:
+      - backup
+
+  # SSL Certificate Management
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    restart: "no"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
+      - ./nginx/webroot:/var/www/certbot
+    profiles:
+      - ssl
+
+volumes:
+  wordpress_data:
+    driver: local
+  db_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  wordpress-network:
+    driver: bridge

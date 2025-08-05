@@ -1,0 +1,54 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Validate Docker Compose
+      run: |
+        docker-compose -f docker-compose.production.yml config
+    
+    - name: Test Nginx Configuration  
+      run: |
+        docker run --rm -v ${{ github.workspace }}/nginx/conf.d:/etc/nginx/conf.d nginx:alpine nginx -t
+    
+    - name: Validate Environment Template
+      run: |
+        if [ ! -f .env.production ]; then
+          echo "Environment template missing"
+          exit 1
+        fi
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy to Production Server
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          cd /opt/wordpress
+          git pull origin main
+          docker-compose -f docker-compose.production.yml pull
+          docker-compose -f docker-compose.production.yml up -d --build
+          
+    - name: Health Check
+      run: |
+        sleep 30
+        curl -f https://greenmetric.nspi.uz/nginx-health || exit 1

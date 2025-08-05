@@ -1,0 +1,47 @@
+# WordPress Production Files
+*.log
+wp-content/uploads/*
+wp-content/cache/*
+wp-content/tmp/*
+wp-config.php
+
+# Environment Files
+.env
+
+# Backup Files
+backups/*.sql.gz
+backups/*.tar.gz
+
+# Docker Volumes
+mysql-data/
+wordpress-data/
+redis-data/
+
+# SSL Certificates (managed by Let's Encrypt)
+nginx/ssl/*
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary Files
+*.tmp
+*.temp
+.cache/
+
+# Node modules (if any)
+node_modules/
+
+# Log Files
+nginx/logs/*
+*.log
+
+# Docker Override (local development)
+docker-compose.override.yml

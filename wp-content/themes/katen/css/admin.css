@@ -1,0 +1,47 @@
+.customizer-section-title {
+  padding: 8px 10px;
+  background: #FE4F70;
+  background: -webkit-linear-gradient(left, #FE4F70 0%, #FFA387 51%, #FE4F70 100%);
+  background: linear-gradient(to right, #FE4F70 0%, #FFA387 51%, #FE4F70 100%);
+  background-size: 200% auto;
+  color: #FFF;
+  cursor: default;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+
+.customizer-section-desc {
+  color: #757e89;
+  font-style: italic;
+  font-size: 13px;
+}
+
+.ocdi-install-plugins-content-content,
+.ocdi__theme-about-screenshots,
+.ocdi__intro-text,
+.ocdi-install-plugins-content-header h2 + p  {
+  display: none !important;
+}
+
+.ocdi__theme-about-info .ocdi-import-mode-switch {
+  float: right;
+  font-size: 14px;
+  line-height: 1;
+  text-decoration: none;
+  color: #FFF;
+  padding: 13px 36px;
+  background: #FE4F70;
+  background: -webkit-linear-gradient(left, #FE4F70 0%, #FFA387 51%, #FE4F70 100%);
+  background: linear-gradient(to right, #FE4F70 0%, #FFA387 51%, #FE4F70 100%);
+  background-size: 200% auto;
+  border-radius: 25px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.ocdi__theme-about-info .ocdi-import-mode-switch:hover {
+  background-position: right center;
+}

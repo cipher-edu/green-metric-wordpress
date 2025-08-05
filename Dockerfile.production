@@ -1,0 +1,56 @@
+# Production WordPress Dockerfile
+FROM wordpress:6.8.2-php8.2-apache
+
+# Install additional PHP extensions and tools
+RUN apt-get update && apt-get install -y \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    libzip-dev \
+    libmemcached-dev \
+    libssl-dev \
+    zlib1g-dev \
+    wget \
+    unzip \
+    cron \
+    nano \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install mysqli pdo pdo_mysql zip opcache \
+    && pecl install redis memcached \
+    && docker-php-ext-enable redis memcached \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install WP-CLI
+RUN curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/v2.8.1/bin/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp
+
+# Copy custom PHP configuration
+COPY uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
+# Enable Apache modules
+RUN a2enmod rewrite headers expires deflate ssl
+
+# Set proper permissions for wp-content
+RUN chown -R www-data:www-data /var/www/html \
+    && find /var/www/html -type d -exec chmod 755 {} \; \
+    && find /var/www/html -type f -exec chmod 644 {} \;
+
+# Create uploads directory with proper permissions
+RUN mkdir -p /var/www/html/wp-content/uploads \
+    && chown -R www-data:www-data /var/www/html/wp-content \
+    && chmod -R 775 /var/www/html/wp-content
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+
+# Copy custom entrypoint
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["apache2-foreground"]

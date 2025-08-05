@@ -1,0 +1,34 @@
+# Docker va WordPress fayllari
+.env
+docker-compose.override.yml
+
+# WordPress cache fayllari
+wp-content/cache/
+wp-content/uploads/cache/
+
+# Temporary va log fayllari
+*.log
+wp-content/debug.log
+error_log
+
+# OS fayllari
+.DS_Store
+Thumbs.db
+
+# IDE fayllari
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node modules (agar tema yoki plagin development qilsangiz)
+node_modules/
+npm-debug.log*
+
+# Backup fayllari
+*.bak
+*.backup
+*.sql
+
+# Vendor fayllari (Composer uchun)
+vendor/

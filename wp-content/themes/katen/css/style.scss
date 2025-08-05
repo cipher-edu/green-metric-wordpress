@@ -1,0 +1,43 @@
+/*
+Theme Name: Katen
+Version: 1.1.1
+Author: ThemeGer
+Author URI: http://themeger.shop
+Description: Minimal Blog and Magazine WordPress Theme
+
+[TABLE OF CONTENTS]
+
+01. Base
+02. Preloader
+03. Typography
+04. Header
+05. Sections
+06. Post
+07. About author
+08. Post comments
+09. Page
+10. Contact
+11. Widgets
+12. Instagram feed
+13. Footer
+14. Search Popup
+15. Helpers
+16. Buttons
+17. Bootstrap Elements
+18. Theme Elements
+19. Slick Settings
+20. Responsive Settings
+
+*/
+@import "sass/mixins";
+@import "sass/base";
+@import "sass/header";
+@import "sass/main";
+@import "sass/helper";
+@import "sass/buttons";
+@import "sass/elements";
+@import "sass/slick";
+@import "sass/responsive";
+@import "sass/theme-core";
+@import "sass/dark";
+@import "sass/woocommerce";

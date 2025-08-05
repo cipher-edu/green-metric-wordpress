@@ -1,0 +1,157 @@
+$colordarkbg: #142030;
+
+body.dark {
+    background-color: $colordarkbg;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .post .post-title a,
+    .widget ul li a,
+    .social-icons a,
+    .canvas-menu .vertical-menu li a,
+    .canvas-menu .btn-close,
+    .newsletter-headline,
+    .post-single .post-content,
+    .page-content,
+    .about-author .details h4.name a,
+    th,
+    strong,
+    .woocommerce-MyAccount-navigation ul li a,
+    .post .post-bottom .more-link,
+    header.dark .navbar.clone .nav-link,
+    .wp-block-archives-list li a,
+    dt
+    {
+        color: #FFF;
+    }
+
+    .page-header,
+    .about-author,
+    .woocommerce-error, 
+    .woocommerce-info, 
+    .woocommerce-message,
+    blockquote,
+    .post.sticky,
+    .wp-block-calendar table th,
+    .wp-block-table.is-style-stripes tbody tr:nth-child(odd),
+    .wp-caption
+    {
+        background-color: rgb(255 255 255 / 5%);
+    }
+
+    .post.post-list .post-bottom .social-share .icons:before 
+    {
+        background: rgb(221 221 221 / 20%);
+    }
+
+    header,
+    .header-default.clone,
+    .canvas-menu,
+    .site-wrapper .main-overlay,
+    .search-popup,
+    .header-personal nav.clone, 
+    .header-classic .header-bottom.clone
+    {
+        background-color: $colordarkbg;
+    }
+
+    .bordered,
+    .widget,
+    .header-default.clone,
+    .header-personal nav.clone, 
+    .header-classic .header-bottom.clone,
+    .elementor-97 .elementor-element.elementor-element-d3bd135,
+    .slick-custom-buttons,
+    .tags a, 
+    .tagcloud a, 
+    .wp-block-tag-cloud a,
+    .btn-simple,
+    #return-to-top,
+    footer.footer .footer-inner,
+    .nav-pills .nav-link,
+    .canvas-menu .vertical-menu li .switch,
+    .post-single .post-bottom,
+    .woocommerce-tabs.wc-tabs-wrapper,
+    div.product .woocommerce-tabs ul.tabs li,
+    div.product .woocommerce-tabs ul.tabs::before,
+    table, th, td,
+    table.shop_attributes,
+    table.shop_attributes td,
+    table.shop_attributes th,
+    table.shop_table,
+    table.shop_table td,
+    #add_payment_method .cart-collaterals .cart_totals tr td, #add_payment_method .cart-collaterals .cart_totals tr th, .woocommerce-cart .cart-collaterals .cart_totals tr td, .woocommerce-cart .cart-collaterals .cart_totals tr th, .woocommerce-checkout .cart-collaterals .cart_totals tr td, .woocommerce-checkout .cart-collaterals .cart_totals tr th,
+    #add_payment_method #payment, .woocommerce-cart #payment, .woocommerce-checkout #payment,
+    #add_payment_method #payment ul.payment_methods, .woocommerce-cart #payment ul.payment_methods, .woocommerce-checkout #payment ul.payment_methods,
+    .woocommerce-MyAccount-navigation,
+    .woocommerce-MyAccount-navigation ul li,
+    .post.post-classic .post-bottom,
+    .post.post-grid .post-bottom,
+    .post.post-xl .post-bottom,
+    .page-numbers,
+    .nextprev-post
+    {
+        border-color: rgb(235 235 235 / 20%);
+    }
+
+    .post.post-list-sm:after,
+    .post.post-list:after,
+    .pagination-seperator:before,
+    .post.post-list-sm.before-seperator:before,
+    .comments li.comment:before, 
+    .comments li.trackback:before, 
+    .comments li.pingback:before
+    {
+        @include linear-gradient(to left, rgb(235 235 235 / 20%) 0%, transparent 100%);
+    }
+
+    .widget ul li:before, ol.wp-block-latest-comments li:before,
+    .canvas-menu .vertical-menu li:after,
+    .wp-block-archives-list li:before
+    {
+        @include linear-gradient(to right, rgb(235 235 235 / 20%) 0%, transparent 100%);
+    }
+
+    .slick-custom-buttons
+    {
+        background: transparent;
+    }
+
+    .post .post-title a,
+    .widget ul li a,
+    .social-icons a
+    {
+        &:hover {
+            color: $colorpink;
+        }
+    }
+
+    #return-to-top,
+    .btn-simple,
+    .tags a, 
+    .tagcloud a, 
+    .wp-block-tag-cloud a,
+    .slick-custom-buttons
+    {
+        &:hover {
+            border-color: $colorpink;
+        }
+    }
+
+    .post .post-bottom .social-share .icons li a:hover 
+    {
+        color: #FFF;
+    }
+
+    .wp-block-image figcaption,
+    .blocks-gallery-caption
+    {
+        color: rgb(255 255 255 / 50%);
+    }
+    .switcher-button .switcher-button-inner-left:after {
+        background: rgb(255 255 255 / 10%);
+    }
+}
